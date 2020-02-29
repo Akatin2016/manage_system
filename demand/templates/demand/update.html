@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../../static/css/demand.css">
+    <script src="../../../static/js/jquery.min.js"></script>
+    <title>修改需求</title>
+</head>
+
+<body>
+    {% include 'demand/header.html' %}
+    <img id="bimg" width=100% src="../../../static/images/th.jpeg" alt="">
+
+    <div id="layer11">
+        <form action="/demand/update/{{ no }}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="hidden1" name="hidden1">
+            <input type="hidden" id="hidden2" name="hidden2">
+            <input type="hidden" id="hidden3" name="hidden3">
+            <div id="d1">
+                <label for="">任务名称：</label><input type="text" name="dname" id="dname">
+            </div>
+            <div id="d2">
+                <label for="">任务类别：</label><select id="type"></select><label id="hint" for="">*请选择</label>
+            </div>
+            <div id="d3">
+                <label for="">任务状态：</label><select id="state"></select><label id="hint2" for="">*请选择</label>
+            </div>
+            <div id="d4">
+                <label for="">需求等级：</label><select id="level"></select><label id="hint3" for="">*请选择</label>
+            </div>
+            <div id="d5">
+                <label for="">需求提交公司：</label><input type="text" name="usercompany" id="usercompany">
+            </div>
+            <div id="d6">
+                <label for="">需求提交用户：</label><input type="text" name="username" id="username">
+            </div>
+            <div id="d7">
+                <label for="">用户电话：</label><input type="text" name="usertel" id="usertel">
+            </div>
+            <div id="d8">
+                <label for="">备注：</label><input type="text" name="remark" id="remark">
+            </div>
+            <div id="d9">
+                <label for="">用户测试日期：</label><input type="text" name="usertestdate" id="usertestdate"
+                    placeholder="日期格式YYYY-MM-DD">
+            </div>
+            <div id="d10">
+                <label for="">上线归档日期：</label><input type="text" name="phdate" id="phdate" placeholder="日期格式YYYY-MM-DD">
+            </div>
+            <input type="submit" name="insert" id="insert" value="修改">
+            <input type="reset" name="res" id="res" value="重置">
+        </form>
+    </div>
+
+    <script src="../../../static/js/header.js"></script>
+    <script src="../../../static/js/mouse.js"></script>
+    <script>
+        getFocus($("#l1 a"));
+
+        // 任务类别
+        var typeArr = [{ 'tname': '1', 'type': '需求' }, { 'tname': '2', 'type': '数据提取' }, { 'tname': '3', 'type': '数据修改' }, { 'tname': '4', 'type': '临时任务' }];
+        var $type = $("#type");
+        $type.html("<option value=''>请选择任务类别</option>");
+        $.each(typeArr, function (i, e) {
+            $type.append("<option value='" + e.tname + "'>" + e.type + "</option>");
+        });
+        $("#type").change(function () {
+            var h1 = $('#type option:selected').val();
+            $("#hidden1").val(h1);
+            if (h1 != "") {
+                $("#hint").addClass("hid");
+            }
+            else {
+                $("#hint").removeClass("hid");
+            }
+        });
+
+        // 任务状态
+        var stateArr = [{ 'sname': "0100", 'state': '录入' }, { 'sname': "0200", 'state': '需求分析已分配' }, { 'sname': "0300", 'state': '需求分析已完成' }, { 'sname': "0400", 'state': '开发任务已分配' }, { 'sname': "0500", 'state': '开发完成' }, { 'sname': "0600", 'state': '测试完成' }, { 'sname': "0700", 'state': '用户测试完成' }, { 'sname': "0800", 'state': '需求已上线' }];
+        var $state = $("#state");
+        $state.html("<option value=''>请选择任务状态</option>");
+        $.each(stateArr, function (i, e) {
+            $state.append("<option value='" + e.sname + "'>" + e.state + "</option>");
+        });
+        $("#state").change(function () {
+            var h2 = $('#state option:selected').val();
+            $("#hidden2").val(h2);
+            if (h2 != "") {
+                $("#hint2").addClass("hid");
+            }
+            else {
+                $("#hint2").removeClass("hid");
+            }
+        });
+
+        // 需求等级
+        var levArr = [{ 'lname': '1', 'level': '一级' }, { 'lname': '2', 'level': '二级' }, { 'lname': '3', 'level': '三级' }, { 'lname': '4', 'level': '四级' }, { 'lname': '5', 'level': '五级' }];
+        var $level = $("#level");
+        $level.html("<option value=''>请选择需求等级</option>");
+        $.each(levArr, function (i, e) {
+            $level.append("<option value='" + e.lname + "'>" + e.level + "</option>");
+        });
+        $("#level").change(function () {
+            var h3 = $('#level option:selected').val();
+            $("#hidden3").val(h3);
+            if (h3 != "") {
+                $("#hint3").addClass("hid");
+            }
+            else {
+                $("#hint3").removeClass("hid");
+            }
+        });
+
+        var $username = $("#dname");
+
+        $("#insert").on("click", function () {
+            var h1 = $('#type option:selected').val();
+            var h2 = $('#state option:selected').val();
+            var h3 = $('#level option:selected').val();
+            if ($username.val() == "") {
+                alert("需求名称为必填项！");
+                return false;
+            }
+            if (h1 == "") {
+                alert("任务类别为必填项！");
+                return false;
+            }
+            if (h2 == "") {
+                alert("任务状态为必填项！");
+                return false;
+            }
+            if (h3 == "") {
+                alert("需求等级为必填项！");
+                return false;
+            }
+        });
+    </script>
+</body>
+
+</html>

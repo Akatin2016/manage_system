@@ -1,0 +1,409 @@
+/* 通用样式 */
+
+ul, h3, p, table, body {
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
+    font-size: 15px;
+    color: #1a1a1a;
+}
+
+button {
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none
+}
+
+ul {
+    list-style-type: none;
+}
+
+table, td {
+    font: 100% Arial, Helvetica, sans-serif;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+th, td {
+    text-align: left;
+    padding: .5em;
+    border: 1px solid #fff;
+}
+
+th {
+    background: #328aa4 url(../images/tr_back.gif) repeat-x;
+    color: #fff;
+}
+
+td {
+    background: #e5f1f4;
+}
+
+tr.even td {
+    background: #e5f1f4;
+}
+
+tr.odd td {
+    background: #f8fbfc;
+}
+
+th.over, tr.even th.over, tr.odd th.over {
+    background: #4a98af;
+}
+
+th.down, tr.even th.down, tr.odd th.down {
+    background: #bce774;
+}
+
+td.over, tr.even td.over, tr.odd td.over {
+    background: #ecfbd4;
+}
+
+td.down, tr.even td.down, tr.odd td.down {
+    background: #bce774;
+    color: #fff;
+}
+
+td.selected, tr.even td.selected, tr.odd td.selected {
+    background: #bce774;
+    color: #555;
+}
+
+td.empty, tr.odd td.empty, tr.even td.empty {
+    background: #fff;
+}
+
+/* 通用样式结束 */
+
+/* 导航栏 */
+
+#navi {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 9;
+    /* 设置覆盖权重，使导航栏不易被覆盖 */
+    color: #fff;
+    background-color: #555;
+}
+
+#navi .con {
+    width: 1140px;
+    height: 80px;
+    line-height: 80px;
+    /* 设置垂直居中 */
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+#navi .con #logo {
+    float: left;
+    margin-right: 32px;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+#navi .con ul {
+    float: left;
+    overflow: hidden;
+    /* 作为 li的父元素，设置内容溢出后隐藏 */
+}
+
+#navi .con ul>li {
+    float: left;
+    font-size: 24px;
+    width: 144px;
+    text-align: center;
+}
+
+#navi .con ul>li>a {
+    color: #fff;
+    text-decoration-line: none;
+}
+
+#navi .con .act {
+    float: right;
+}
+
+#navi .con .act>a {
+    margin-right: 20px;
+}
+
+/* 增加导航栏选中样式 */
+
+#navi .focus {
+    color: aqua;
+}
+
+/* 导航栏样式结束 */
+
+/* 背景图片 */
+
+#bimg {
+    opacity: 0.6;
+    position: fixed;
+}
+
+/* 背景图片结束 */
+
+/* 第一层（查询）样式 */
+
+#layer1 {
+    width: 720px;
+    height: 180px;
+    border-color: transparent;
+    position: absolute;
+    top: 20%;
+    margin-top: 20px;
+    left: 50%;
+    margin-left: -360px;
+}
+
+#layer1 .txt {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+#layer1 .txt #dname {
+    width: 250px;
+    font-size: 13px;
+    padding: 10px;
+    padding-right: 10px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    border: 1px solid#e4e6e5;
+    margin-bottom: 10px;
+    margin-right: 20px;
+}
+
+#layer1 .txt #no {
+    width: 250px;
+    font-size: 13px;
+    padding: 10px;
+    padding-right: 10px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    border: 1px solid #e4e6e5;
+    margin-bottom: 10px;
+}
+
+#layer1 #btns {
+    width: 720px;
+    height: 40px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+#layer1 #btns select {
+    width: 144px;
+    height: 30px;
+    margin-left: 15px;
+    margin-right: 20px;
+    border-radius: 7px;
+    text-align: center;
+}
+
+#layer1 #btns #find {
+    display: inline-block;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 32px;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    border: 1px solid;
+    background-color: #0084ff;
+    width: 64px;
+    height: 32px;
+    border-color: #0084ff;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#layer1 #btns #delete {
+    display: inline-block;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 32px;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    border: 1px solid;
+    background-color: #0084ff;
+    width: 64px;
+    height: 32px;
+    margin-left: 20px;
+    margin-right: 15px;
+    border-color: #0084ff;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#layer1 #btns #upload{
+    display: inline-block;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 32px;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    border: 1px solid;
+    background-color: #0084ff;
+    width: 64px;
+    height: 32px;
+    margin-left: 20px;
+    margin-right: 15px;
+    border-color: #0084ff;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#find:hover, #delete:hover, #upload:hover{
+    opacity: 0.8;
+}
+
+#layer1 .jumpto {
+    text-align: center;
+}
+
+#layer1 .jumpto a {
+    margin: auto 20px;
+    text-decoration-line: none;
+    color: deepskyblue;
+}
+
+#layer1 .jumpto a:hover {
+    color: mediumblue;
+}
+
+.phcolor::-moz-placeholder {
+    color: red;
+}
+
+
+/* 第一层（录入）样式 */
+#layer11 {
+    width: 360px;
+    height: 720px;
+    border-color: transparent;
+    position: absolute;
+    top: 20%;
+    margin-top: 20px;
+    left: 50%;
+    margin-left: -180px;
+    overflow: hidden;
+}
+
+#layer11 form {
+    height: 100%;
+}
+
+#d1, #d2, #d3, #d4, #d5, #d6, #d7, #d8, #d9, #d10 {
+    margin-bottom: 16px;
+}
+
+#d1 input,#d7 input {
+    margin-left: 30px;
+    width:216px;
+}
+
+#d2 select,#d3 select, #d4 select{
+    margin-left: 32px;
+}
+
+#d2 #hint, #d3 #hint2, #d4 #hint3 {
+    color: red;
+}
+
+.hid {
+    display: none;
+}
+
+#d5 input,#d6 input ,#d9 input, #d10 input{
+    width: 216px;
+}
+
+#d8 input{
+    margin-left: 60px;
+    width: 216px;
+}
+
+#layer11 #insert {
+    margin: 8px 48px;
+    display: inline-block;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 32px;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    border: 1px solid;
+    background-color: #0084ff;
+    width: 64px;
+    height: 32px;
+    border-color: #0084ff;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#layer11 #res {
+    margin: 8px 32px;
+    display: inline-block;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 32px;
+    color: #fff;
+    cursor: pointer;
+    background: none;
+    border: 1px solid;
+    background-color: #0084ff;
+    width: 64px;
+    height: 32px;
+    border-color: #0084ff;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#insert:hover, #res:hover {
+    opacity: 0.8;
+}
+
+#layer11 button {
+    margin-top: 16px;
+    margin-left: 96px;
+}
+
+#layer11 button>a {
+    text-decoration-line: none;
+    color: deepskyblue;
+}
+
+#layer11 button>a:hover {
+    color: mediumblue;
+}
+
+/* 第一层结束 */
+
+/* 第二层样式 */
+
+#layer2 {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    margin-left: -540px;
+    width:1080px;
+}
+
+/* 第二层结束 */

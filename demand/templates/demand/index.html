@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../static/css/demand.css">
+    <script src="../../../static/js/jquery.min.js"></script>
+    <script src="../../../static/js/tablecloth.js"></script>
+    <title>查询需求</title>
+</head>
+
+<body>
+    {% include 'demand/header.html' %}
+    <img id="bimg" width=100% src="../../../static/images/th.jpeg" alt="">
+    <div id="layer1">
+
+        <!-- 弃用form方式，使用jQuery获取每个元素的值，使用ajax向服务端发送数据 -->
+        <!--把csrf的值放在请求头里传给服务端-->
+        <!--隐藏输入框传递下拉菜单选中的值-->
+        <input type="hidden" id="hidden1" name="hidden1">
+        <input type="hidden" id="hidden2" name="hidden2">
+        <input type="hidden" id="hidden3" name="hidden3">
+        <div class="txt">
+            <input type="text" name="dname" id="dname" placeholder="请输入需求名称">
+            <input type="text" name="no" id="no" placeholder="请输入需求编号">
+        </div>
+        <div id="btns">
+            <select id="type"></select>
+            <select id="state"></select>
+            <select id="level"></select>
+            <input type="submit" name="find" id="find" value="查询">
+            <input type="submit" name="delete" id="delete" value="删除">
+        </div>
+        <div class="jumpto">
+            <a href="/demand/insert">录入</a>
+        </div>
+    </div>
+
+    <div id="layer2">
+        <table class="table">
+            <tr id="first">
+                <th>任务编号</th>
+                <th>任务名称</th>
+                <th>任务类别</th>
+                <th>任务状态</th>
+                <th>需求提交公司</th>
+                <th>需求提交用户</th>
+                <th>用户电话</th>
+                <th>接收需求时间</th>
+                <th>需求等级</th>
+                <th>备注</th>
+                <th>用户测试日期</th>
+                <th>上线归档日期</th>
+            </tr>
+        </table>
+    </div>
+
+    <script src="../../../static/js/header.js"></script>
+    <script src="../../../static/js/mouse.js"></script>
+
+    <script>
+        getFocus($("#l1 a"));
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // 这些HTTP方法不要求CSRF包含
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        // 任务类别
+        var typeArr = [{ 'tname': '1', 'type': '需求' }, { 'tname': '2', 'type': '数据提取' }, { 'tname': '3', 'type': '数据修改' }, { 'tname': '4', 'type': '临时任务' }];
+        var $type = $("#type");
+        $type.html("<option value=''>请选择任务类别</option>");
+        $.each(typeArr, function (i, e) {
+            $type.append("<option value='" + e.tname + "'>" + e.type + "</option>");
+        });
+        $("#type").change(function () {
+            var h1 = $('#type option:selected').val();
+            $("#hidden1").val(h1);
+        });
+
+        // 任务状态
+        var stateArr = [{ 'sname': "0100", 'state': '录入' }, { 'sname': "0200", 'state': '需求分析已分配' }, { 'sname': "0300", 'state': '需求分析已完成' }, { 'sname': "0400", 'state': '开发任务已分配' }, { 'sname': "0500", 'state': '开发完成' }, { 'sname': "0600", 'state': '测试完成' }, { 'sname': "0700", 'state': '用户测试完成' }, { 'sname': "0800", 'state': '需求已上线' }];
+        var $state = $("#state");
+        $state.html("<option value=''>请选择任务状态</option>");
+        $.each(stateArr, function (i, e) {
+            $state.append("<option value='" + e.sname + "'>" + e.state + "</option>");
+        });
+        $("#state").change(function () {
+            var h2 = $('#state option:selected').val();
+            $("#hidden2").val(h2);
+        });
+
+        // 需求等级
+        var levArr = [{ 'lname': '1', 'level': '一级' }, { 'lname': '2', 'level': '二级' }, { 'lname': '3', 'level': '三级' }, { 'lname': '4', 'level': '四级' }, { 'lname': '5', 'level': '五级' }];
+        var $level = $("#level");
+        $level.html("<option value=''>请选择需求等级</option>");
+        $.each(levArr, function (i, e) {
+            $level.append("<option value='" + e.lname + "'>" + e.level + "</option>");
+        });
+        $("#level").change(function () {
+            var h3 = $('#level option:selected').val();
+            $("#hidden3").val(h3);
+        });
+
+        var $username = $("#dname");
+        var $no = $("#no");
+
+        $no.bind("focus", function () {
+            if ($username.val() == "") {
+                $username.attr("placeholder", "查询可选填需求名称！");
+                $username.addClass("phcolor");
+            }
+        });
+
+        $username.bind("focus", function () {
+            if ($no.val() == "") {
+                $no.attr("placeholder", "删除必填写需求编号！");
+                $no.addClass("phcolor");
+            }
+        });
+
+        var $find = $("#find");
+        var $delete = $("#delete");
+
+        var unit = document.getElementsByTagName("table")[0];
+
+        $find.on("click", function () {
+            $.ajax({
+                url: "/demand/index",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    "dname": $("#dname").val(),
+                    "no": $("#no").val(),
+                    "hidden1": $("#hidden1").val(),
+                    "hidden2": $("#hidden2").val(),
+                    "hidden3": $("#hidden3").val(),
+                },
+                success: function (data) {
+                    // console.log(data);
+                    $("tr:not(tr:first)").html("");
+                    if (data.code == 1001 || data.code == 1002) {
+                        alert(data.data.message);
+                        return false;
+                    }
+                    $.each(data, function (i, item) {
+                        // console.log(item);//测试调用
+                        $.each(item, function (i, e) {
+                            // console.log(e);//测试调用
+                            var tr = '<td><a href="/demand/update/' + e.id + '">' + e.id + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missionname + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missiontype + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missionstate + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.usercompany + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.username + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.usertel + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.receivetime + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missionlevel + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.remark + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.usertestdate + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.phdate + '</a></td>';
+                            if (e.missionstate != '删除') {
+                                $("#first").after('<tr>' + tr + '</tr>');
+                            }
+                        });
+                    });
+                },
+            });
+        });
+
+        $delete.on("click", function () {
+            var flag = 0;
+            if ($no.val() == "") {
+                alert("需求编号不能为空");
+            }
+            else {
+                for (var i = 1; i < unit.rows.length; i++) {
+                    if ($no.val() == unit.rows[i].cells[0].innerText) {
+                        flag = 1;
+                        var flag2 = i;
+                        // 选中记录的需求状态是否为已录入，如果为已录入，则可以删除，不能删除已分配的任务
+                        if (unit.rows[flag2].cells[3].innerText == "录入") {
+                            //后端 删除逻辑
+                            var c = confirm("是否删除");
+                            if (c == true) {
+                                var str = $no.val()//查询字符串
+                                $.ajax({
+                                    url: "/demand/index?no=" + str,
+                                    type: "DELETE",
+                                    dataType: "json",
+                                    success: function (data) {
+                                        console.log(data);
+                                        console.log(data.code);
+                                        $("tr:not(tr:first)").html("");
+                                        if (data.code == 1001 || data.code == 1002) {
+                                            alert("删除失败！", data.data.message);
+                                            return false;
+                                        }
+                                        else {
+                                            alert("删除成功！");
+                                        }
+                                        $.each(data, function (i, item) {
+                                            // console.log(item);//测试调用
+                                            $.each(item, function (i, e) {
+                                                // console.log(e);//测试调用
+                                                var tr = '<td><a href="/demand/update/' + e.id + '">' + e.id + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missionname + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missiontype + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missionstate + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.usercompany + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.username + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.usertel + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.receivetime + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.missionlevel + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.remark + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.usertestdate + '</a></td><td><a href="/demand/update/' + e.id + '">' + e.phdate + '</a></td>';
+                                                if (e.missionstate != '删除') {
+                                                    $("#first").after('<tr>' + tr + '</tr>');
+                                                }
+                                            });
+                                        });
+                                    },
+                                });
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                        else {
+                            alert("不能删除");
+                            return false;
+                        }
+                    }
+                    else {
+                        flag = 0;
+                    }
+                }
+                if (flag == 0)
+                    alert("没有这一项需求");
+                return false;
+            }
+        });
+    </script>
+
+</body>
+
+</html>

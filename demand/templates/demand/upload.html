@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../../static/css/demand.css">
+    <script src="../../../static/js/jquery.min.js"></script>
+    <title>需求文档</title>
+</head>
+
+<body>
+    {% include 'demand/header.html' %}
+    <img id="bimg" width=100% src="../../../static/images/th.jpeg" alt="">
+    <div id="layer1">
+        <div class="txt">
+            <input type="text" name="no" id="no" placeholder="请输入需求编号" form="form_data">
+        </div>
+        <div id="btns">
+            <input type="submit" name="find" id="find" value="查询">
+            <form id="form_data" method="POST" action="/demand/upload" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="myfile" id="myfile">
+                <input type="submit" name="upload" id="upload" value="上传">
+            </form>
+            <!-- <a href="" download="filename">下载</a>在表格中为每一条数据嵌入链接 -->
+        </div>
+    </div>
+
+    <div id="layer2">
+        <table class="table">
+            <tr id="first">
+                <th>需求编号</th>
+                <th>文件名称</th>
+                <th>上传人</th>
+                <th>上传时间</th>
+            </tr>
+        </table>
+    </div>
+
+    <script src="../../../static/js/header.js"></script>
+    <script src="../../../static/js/mouse.js"></script>
+    <script>
+        getFocus($("#l1 a"));
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // 这些HTTP方法不要求CSRF包含
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        var $find = $("#find");
+        var $upload = $("#upload");
+        var $no = $("#no");
+
+        $find.on("click", function () {
+            var str = $no.val();
+            $.ajax({
+                url: "/demand/upload?no=" + str,
+                type: "PUT",
+                dataType: "json",
+                data: {
+                    "no": $no.val()
+                },
+                success: function (data) {
+                    // console.log(data);
+                    $("tr:not(tr:first)").html("");
+                    if (data.code == 1001 || data.code == 1002) {
+                        alert(data.data.message);
+                        return false;
+                    }
+                    $.each(data, function (i, item) {
+                        // console.log(item);//测试调用
+                        $.each(item, function (i, e) {
+                            // console.log(e);//测试调用
+                            var tr = '<td><a href="/static/files/' + e.filename + ' "download="' + e.filename + '">' + e.missionid_id + '</a></td><td><a href="/static/files/' + e.filename + '"download="' + e.filename + '">' + e.filename + '</a></td><td><a href="/static/files/' + e.filename + '"download="' + e.filename + '">' + e.uploader + '</a></td><td><a href="/static/files/' + e.filename + '"download="' + e.filename + '">' + e.uploaddate + '</a></td>';
+                            $("#first").after('<tr>' + tr + '</tr>');
+                        });
+                    });
+                },
+            });
+        });
+
+        $upload.on("click", function () {
+            if ($no.val() == "") {
+                alert("请先选择任务编号再上传！");
+                return false;
+            }
+        });
+
+    </script>
+</body>
+
+</html>
